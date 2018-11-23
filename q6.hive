@@ -1,0 +1,11 @@
+SET hive.cli.print.header=true;
+
+
+Select S.Team as Country, ABS(S.count-W.count) as winter_summer_goldmedal_diff 
+From(select  Team as team , count(Team) as count from athlete_events where (Season=="Winter" and Medal="Gold") 
+group by Team ) as W
+join (select  Team as team , count(Team) as count from athlete_events where (Season=="Summer" and Medal="Gold")
+group by Team) as S 
+on S.Team=W.Team
+order by winter_summer_goldmedal_diff DESC
+limit 5;

@@ -1,0 +1,31 @@
+SET hive.cli.print.header=true;
+
+SELECT  winter.sport1, count(winter.year1)as winter_count
+from (select year as year1, sport as sport1
+from athlete_events
+where (season=='Winter')
+group by  year,sport)as winter
+group by sport1
+order by winter_count desc
+Limit 5;
+
+SET hive.cli.print.header=true;
+
+Select distinct(year) as years_without_top5wintersports from athlete_events where( sport not in ('Nordic Combined','Ice Hockey','Figure Skating',
+'SpeedSkating' ,'Cross Country Skiing')and season=='winter');
+
+
+SET hive.cli.print.header=true;
+
+SELECT  summer.sport1, count(summer.year1)as summer_count
+from (select year as year1, sport as sport1
+from athlete_events
+where (season=='Summer')
+group by  year,sport)as summer
+group by sport1
+order by summer_count desc
+limit 5;
+
+SET hive.cli.print.header=true;
+Select distinct(year) as years_without_top5Summersports from athlete_events where (sport not in ('Cycling','Fencing','Swimming','Gymnastics','Athletics') and season=='summer');
+

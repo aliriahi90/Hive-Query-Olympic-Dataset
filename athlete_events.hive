@@ -1,0 +1,23 @@
+DROP TABLE IF EXISTS athlete_events_m;
+
+CREATE TABLE athlete_events_m(
+        ID int,
+        Name string,
+        Sex string,
+        Age int,
+        Height int,
+        Weight int,
+        Team string,
+        NOC string,
+        Games string,
+        Year int,
+        Season string,
+        City string,
+        Sport string,
+        Medal string,
+        Event string)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '|'
+tblproperties ("skip.header.line.count"="1");
+
+LOAD DATA LOCAL INPATH 'athlete_events_mod.txt' OVERWRITE INTO TABLE athlete_events_m;

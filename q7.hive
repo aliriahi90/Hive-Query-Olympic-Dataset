@@ -1,0 +1,22 @@
+SET hive.cli.print.header=true;
+
+ 
+
+SELECT City as Winter_Cities, COUNT(City) as Count_City
+FROM athlete_events
+WHERE (Season=='Winter')
+GROUP BY City
+ORDER BY Count_City DESC
+LIMIT 5;
+
+
+SET hive.cli.print.header=true;
+
+
+
+SELECT City as Summer_Cities, COUNT(City) as Count_City
+FROM athlete_events
+WHERE (Season=='Summer')
+GROUP BY City
+ORDER BY Count_City DESC
+LIMIT 5;

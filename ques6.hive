@@ -1,0 +1,17 @@
+SET hive.cli.print.header=true;
+
+!echo The below output shows the top 10 countries that have the biggest difference between their summer and winter olypmics gold counts;
+
+select b.region country, scount,wcount,wsgmedaldiff from
+(Select S.country as Country, s.count scount, w.count wcount, ABS(S.count-W.count) as wsgmedaldiff 
+From(select  noc as country , count(medal) as count from athlete_events where (Season=="Winter" and Medal="Gold") 
+group by noc) as W
+join (select  noc  as country , count(medal) as count from athlete_events where (Season=="Summer" and Medal="Gold")
+group by noc) as S 
+on S.country = W.country
+order by wsgmedaldiff DESC
+limit 10) a
+join
+(select noc, region from noc_regions) b
+on a.country = b.noc;
+

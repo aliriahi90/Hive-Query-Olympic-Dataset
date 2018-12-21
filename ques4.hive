@@ -1,0 +1,127 @@
+SET hive.cli.print.header=true;
+
+!echo The below output shows the top 5 summer olympics in terms of the number of countries participated and the corresponding year's male and female participation;
+
+select b.year styr, a.summer_count `#countries`, nvl(b.fcount,0) fcount, b.mcount mcount from
+(SELECT  summer.year1 topsummer_year, count(summer.noc1)as summer_count
+from (select year as year1, noc as noc1
+from athlete_events
+where (season=='Summer')
+group by  year,noc)as summer
+group by year1
+order by summer_count desc
+limit 5) a
+join
+(select a.year year, mcount, nvl(fcount,0) fcount from
+(select year, count(distinct(name)) mcount from athlete_events
+where sex ='M'
+group by year) a left outer join
+(select year,count(distinct(name)) fcount from athlete_events
+where sex = 'F'
+group by year) b
+on (a.year = b.year)
+where a.year in (select topyear.year
+from(SELECT  summer.year1 as year, count(summer.team1)as summer_count
+from (select year as year1, noc as team1
+from athlete_events
+where (season=='Summer')
+group by  year,noc)as summer
+group by year1
+order by summer_count desc
+limit 5)as topyear)) b
+on (a.topsummer_year = b.year);
+
+
+!echo The below output shows the bottom 5 summer olympics in terms of the number of countries participated and the corresponding year's male and female participation;
+
+select b.year sbyr, a.summer_count `#countries`, nvl(b.fcount,0) fcount, b.mcount mcount from
+(SELECT  summer.year1 botsummer_year, count(summer.noc1)as summer_count
+from (select year as year1, noc as noc1
+from athlete_events
+where (season=='Summer')
+group by  year,noc)as summer
+group by year1
+order by summer_count
+limit 5) a
+join
+(select a.year year, mcount, nvl(fcount,0) fcount from
+(select year, count(distinct(name)) mcount from athlete_events
+where sex ='M'
+group by year) a left outer join
+(select year,count(distinct(name)) fcount from athlete_events
+where sex = 'F'
+group by year) b
+on (a.year = b.year)
+where a.year in (select botyear.year
+from(SELECT  summer.year1 as year, count(summer.team1)as summer_count
+from (select year as year1, noc as team1
+from athlete_events
+where (season=='Summer')
+group by  year,noc)as summer
+group by year1
+order by summer_count
+limit 5)as botyear)) b
+on (a.botsummer_year = b.year);
+
+!echo The below output shows the top 5 winter olympics in terms of the number of countries participated and the corresponding year's male and female participation;
+
+select b.year wtyr, a.winter_count `#countries`, nvl(b.fcount,0) fcount, b.mcount mcount from
+(SELECT  winter.year1 topwinter_year, count(winter.noc1)as winter_count
+from (select year as year1, noc as noc1
+from athlete_events
+where (season=='Winter')
+group by  year,noc)as winter
+group by year1
+order by winter_count desc
+limit 5) a
+join
+(select a.year year, mcount, nvl(fcount,0) fcount from
+(select year, count(distinct(name)) mcount from athlete_events
+where sex ='M'
+group by year) a left outer join
+(select year,count(distinct(name)) fcount from athlete_events
+where sex = 'F'
+group by year) b
+on (a.year = b.year)
+where a.year in (select topyear.year
+from(SELECT  winter.year1 as year, count(winter.team1)as winter_count
+from (select year as year1, noc as team1
+from athlete_events
+where (season=='Winter')
+group by  year,noc)as winter
+group by year1
+order by winter_count desc
+limit 5)as topyear)) b
+on (a.topwinter_year = b.year);
+
+!echo The below output shows the bottom 5 winter olympics in terms of the number of countries participated and the corresponding year's male and female participation;
+
+select b.year wtyr, a.winter_count `#countries`, nvl(b.fcount,0) fcount, b.mcount mcount from
+(SELECT  winter.year1 botwinter_year, count(winter.noc1)as winter_count
+from (select year as year1, noc as noc1
+from athlete_events
+where (season=='Winter')
+group by  year,noc)as winter
+group by year1
+order by winter_count
+limit 5) a
+join
+(select a.year year, mcount, nvl(fcount,0) fcount from
+(select year, count(distinct(name)) mcount from athlete_events
+where sex ='M'
+group by year) a left outer join
+(select year,count(distinct(name)) fcount from athlete_events
+where sex = 'F'
+group by year) b
+on (a.year = b.year)
+where a.year in (select botyear.year
+from(SELECT  winter.year1 as year, count(winter.team1)as winter_count
+from (select year as year1, noc as team1
+from athlete_events
+where (season=='Winter')
+group by  year,noc)as winter
+group by year1
+order by winter_count
+limit 5)as botyear)) b
+on (a.botwinter_year = b.year);
+

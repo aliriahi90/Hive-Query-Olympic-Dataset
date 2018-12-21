@@ -1,0 +1,21 @@
+SET hive.cli.print.header=true;
+
+!echo The below output shows the top 10 cities in terms of most number of summer olympics hosted in this city and the respective years in which the olympics was hosted;
+
+select a.city CITY, count(city) COUNT, concat_ws(',',collect_set(cast(a.year as string))) YEAR from 
+(select city, year from  athlete_events
+where season ='Summer'
+group by city,year) a
+group by city
+order by COUNT desc, city
+limit 10;
+
+!echo The below output shows the top 10 cities in terms of most number of winter olympics hosted in this city and the respective years in which the olympics was hosted;
+
+select a.city CITY, count(city) COUNT, concat_ws(',',collect_set(cast(a.year as string))) YEAR from
+(select city, year from  athlete_events
+where season ='Winter'
+group by city,year) a
+group by city
+order by COUNT desc, city
+limit 10;

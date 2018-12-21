@@ -1,0 +1,15 @@
+SET hive.cli.print.header=true;
+
+!echo The below output shows the average age, height and weight of players winning gold, silver and bronze medals respectively in Badminton ;
+
+select a.medal medal,round(a.age,2) age,round(a.height,2) height, round(a.weight,2) weight
+from 
+(select sport,medal,avg(age) age,avg(height) height,avg(weight) weight
+from athlete_events
+where sport = 'Badminton' and medal !='NA'
+group by sport,medal
+) a
+order by age;
+
+
+   

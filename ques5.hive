@@ -1,0 +1,24 @@
+SET hive.cli.print.header=true;
+
+!echo The below output shows the top 5 sports in terms of how many times they were part of the summer olympics over the years;
+
+SELECT  summer.sport1 ssport, count(summer.year1)as scount
+from (select year as year1, sport as sport1
+from athlete_events
+where (season=='Summer')
+group by  year,sport)as summer
+group by sport1
+order by scount desc
+limit 5;
+
+!echo The below output shows the top 5 sports in terms of how many times they were part of the winter olympics over the years;
+
+SELECT  winter.sport1 wsport, count(winter.year1)as wcount
+from (select year as year1, sport as sport1
+from athlete_events
+where (season=='Winter')
+group by  year,sport)as winter
+group by sport1
+order by wcount desc
+Limit 5;
+

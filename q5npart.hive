@@ -1,0 +1,35 @@
+SET hive.cli.print.header=true;
+set hive.auto.convert.join=false;
+
+!echo The below output shows the years in which a particular sport was not part of the olympics;
+
+select i.sport sport,concat_ws(',',collect_set(cast(i.npt as string))) `!participation-year` from
+
+(select DISTINCT sport, npt from
+(select f.sport sport, g.npt npt from
+(select sport, year from
+athlete_events
+where sport = '${hivevar:sport}'
+--where sport ='Speed Skating'
+group by sport, year
+) f,
+
+
+(select distinct(ya) npt from
+(
+select d.sa,d.ya,b.sb, b.yb from
+(select a.sport sa,a.year ya from athlete_events a) d
+left outer join
+(select sport sb, year yb from
+athlete_events
+where sport = '${hivevar:sport}'
+--where sport = 'Speed Skating'
+group by sport, year
+order by sport
+) b
+on d.ya = b.yb
+where b.yb is null
+--limit 500
+) e) g
+where f.year != g.npt) h) i
+group by i.sport;

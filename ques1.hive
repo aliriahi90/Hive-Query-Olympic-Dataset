@@ -1,0 +1,43 @@
+SET hive.cli.print.header=true;
+
+!echo The below output shows the top 5 countries in terms of number of medals won over the years and also the distribution of male and female participants winning those medals;
+
+select i.country country, count medal, fcount,mcount from
+(SELECT  noc.region as country, count(a.Medal) as count
+from athlete_events a join noc_regions noc
+on a.NOC = noc.NOC
+where a.Medal !='NA'
+Group by region
+Order by count desc
+limit 5) h join
+(select country,
+collect_set(femalecount)[0] as fcount,
+collect_set(malecount)[0] as mcount
+from
+(select d.reg country, 
+case when d.sex = 'F' then d.ct end femalecount,
+case when d.sex = 'M' then d.ct end  malecount
+from
+(select g.region reg,f.sex sex,count(sex) ct from athlete_events f join noc_regions g on f.noc = g.noc
+where f.medal !='NA'
+and g.region in (select c.region country from (SELECT  b.region region, count(a.medal) count
+from athlete_events a join noc_regions b
+on a.NOC = b.NOC
+where a.Medal !='NA' 
+--and a.noc = 
+Group by region
+Order by count desc
+limit 5) c)
+group by g.region,f.sex) d) e
+group by country) i
+on (h.country = i.country)
+order by medal desc
+;
+
+
+
+
+
+
+
+
